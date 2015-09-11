@@ -39,21 +39,26 @@ to it."
   (cond
    ;;If the left-subtree is deeper than the right subtree.
    ((> (- (height left-subtree) (height right-subtree)) 1)
-    ;;Rotate the tree to the right.  The original root becomes the right node
-    ;;with its left sub-tree its left node's right-subtree (in the original
-    ;;tree, it contained values less than the root and greater than its left
-    ;;child).
-    (let ((new-right (make-tree (caar tree) (cddr left-subtree) right-subtree)))
-      ;;The new root should be what was the left node, with its left node 
-      ;;unchanged and its right node the former root (new-right).
-      (make-tree (caar left-subtree) (cadr left-subtree) new-right)))
-   ;;If the right node is deeper than the left node.
+    ;;If the left subtree of the left subtree is at least as deep as the right
+    ;;subtree of the left subtree then a simple right rotation will suffice.
+    ;;If the right subtree of the left subtree is deeper than perform a 
+    ;;left-right rotation.
+    (if (>= (height (cadr left-subtree))
+	    (height (cddr left-subtree)))
+	(rotate-right tree)
+      (rotate-right (make-tree (caar tree) (rotate-left left-subtree) right-subtree))))
+
+   ;;If the right node is deeper than the left node (if it is right-heavy with
+   ;;a balance factor of two of greater
    ((> (- (height right-subtree) (height left-subtree)) 1)
-    (let ((new-left (make-tree (caar tree) left-subtree (cadr right-subtree))))
-      (make-tree (caar right-subtree) new-left (cddr right-subtree))))
+    (if (>= (height (cddr right-subtree))
+	    (height (cadr right-subtree)))
+	(rotate-left tree)
+      (rotate-left (make-tree (caar tree) left-subtree (rotate-right right-subtree)))))
    ;;If neither condition was true, the tree is balanced and return it 
    ;;unchanged.
    (t tree))))
+
 (defun contains-value (node value)
 "Returns t if the tree contains the value, otherwise nil."
   (let ((root-value (caar node)))
