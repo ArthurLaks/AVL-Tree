@@ -2,13 +2,13 @@ This repository contains implementations of the Binary Aearch tree and AVL tree
 data structures.
 
 BST.lisp is an implementation of the binary search tree constructed 
-entirely from cons cells.  This is how to make a node is constructed:
+entirely from cons cells.  This is how a node is constructed:
 
  ````lisp
     (cons node-value (cons right-node left-node))
 ````
 
-Thus, I did not define any new types.  AVLBST.lisp is an AVL tree that 
+Thus, I did not define any new types.  AVLTree.lisp is an AVL tree that 
 is built on BST.lisp.  Its nodes are defined like this: 
 
 ````lisp
